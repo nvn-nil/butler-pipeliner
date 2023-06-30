@@ -1,0 +1,20 @@
+apiVersion: nvn.ver/v1beta1
+kind: Task
+metadata:
+    name: Line thinner
+    description: Reduces the number of points along a straight line (with some allowed angular deviation)
+spec:
+    params:
+      - name: input
+        description: Filepath
+        type: existingPath
+      - name: suffix
+        type: string
+        default: _output
+    steps:
+      - name: Reduce points
+        workingDir: D:\personal\pipeliner\dist
+        binary: line_thinner_v0.1.0.exe
+        args:
+          - -i "${params.input}"
+          - -s ${params.suffix}

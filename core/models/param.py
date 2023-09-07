@@ -1,19 +1,18 @@
-from copy import copy
 import os
+from copy import copy
 from tempfile import TemporaryDirectory
 
 
-
-def check_path_valid(path, check_existence = False):
+def check_path_valid(path, check_existence=False):
     file_exists = os.path.exists(path)
     if check_existence:
         return file_exists
- 
+
     if file_exists:
         return True
 
     pathname = path.replace("/", os.path.sep)
-    
+
     has_access = False
     pathname_copy = copy(pathname)
     while not has_access and len(pathname_copy.split(os.path.sep)) > 1:
@@ -24,9 +23,9 @@ def check_path_valid(path, check_existence = False):
 
     if not has_access:
         return False
-    
+
     with TemporaryDirectory() as tempdir:
-        rel_path = pathname.replace(pathname_copy, '')
+        rel_path = pathname.replace(pathname_copy, "")
         if rel_path.startswith("\\"):
             rel_path = rel_path[1:]
         try:
@@ -38,13 +37,7 @@ def check_path_valid(path, check_existence = False):
             return True
 
 
-type_checker = {
-    "string": str,
-    "int": int,
-    "float": float,
-    "path": check_path_valid,
-    "existingPath": check_path_valid
-}
+type_checker = {"string": str, "int": int, "float": float, "path": check_path_valid, "existingPath": check_path_valid}
 
 
 class Param:
@@ -62,13 +55,13 @@ class Param:
     def value(self, value):
         if value is None:
             self._value = None
-        elif self.type == 'path':
-            if type_checker['path'](value, check_existence=False):
+        elif self.type == "path":
+            if type_checker["path"](value, check_existence=False):
                 self._value = value
             else:
                 raise Exception(f"Invalid path: {value}")
-        elif self.type == 'existingPath':
-            if type_checker['existingPath'](value, check_existence=True):
+        elif self.type == "existingPath":
+            if type_checker["existingPath"](value, check_existence=True):
                 self._value = value
             else:
                 raise Exception(f"Invalid existingPath: {value}")

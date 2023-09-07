@@ -1,5 +1,6 @@
-from copy import copy
 import os
+from copy import copy
+
 
 class Step:
     def __init__(self, name=None, workingDir=None, binary=None, args=None):
@@ -24,12 +25,11 @@ class Step:
         param_names_without_default = set(param for param in params.keys() if params[param].value is None)
 
         if not param_names_without_default.issubset(param_values_names):
-            raise Exception(f"Param values for all the parameters defined in spec is required", param_names)
+            raise Exception(f"Param values for all the parameters defined in spec is required: {param_names}")
 
         value_injected_params = {}
         for param_name in param_values:
             value_injected_params[param_name] = params[param_name].inject_value(param_values[param_name], copy=True)
-
 
         command = copy(self._command_template)
         for param_name in value_injected_params:
@@ -38,27 +38,27 @@ class Step:
             if value_injected_params[param_name].type.lower().endswith("path"):
                 value = value_injected_params[param_name].value
                 replace_string = "${params." + param_name + ".basename}"
-                value = f'{os.path.basename(value)}'
+                value = f"{os.path.basename(value)}"
                 replace_operations.append((replace_string, value))
 
                 value = value_injected_params[param_name].value
                 replace_string = "${params." + param_name + ".basename_noext}"
-                value = f'{os.path.splitext(os.path.basename(value))[0]}'
+                value = f"{os.path.splitext(os.path.basename(value))[0]}"
                 replace_operations.append((replace_string, value))
-                
+
                 value = value_injected_params[param_name].value
                 replace_string = "${params." + param_name + ".dirname}"
-                value = f'{os.path.dirname(value)}'
+                value = f"{os.path.dirname(value)}"
                 replace_operations.append((replace_string, value))
 
                 value = value_injected_params[param_name].value
                 replace_string = "${params." + param_name + ".extension}"
-                value = f'{os.path.splitext(value)[-1]}'
+                value = f"{os.path.splitext(value)[-1]}"
                 replace_operations.append((replace_string, value))
-                
+
                 value = value_injected_params[param_name].value
                 replace_string = "${params." + param_name + "}"
-                value = f'{value}'
+                value = f"{value}"
                 replace_operations.append((replace_string, value))
             else:
                 replace_string = "${params." + param_name + "}"
@@ -67,9 +67,9 @@ class Step:
             for replace_text, replace_value in replace_operations:
                 command = command.replace(replace_text, replace_value)
 
-        if '${' in command:
+        if "${" in command:
             raise Exception("All expressions could not be substituted. Check you have passed all the params", command)
-                
+
         return command
 
     @property

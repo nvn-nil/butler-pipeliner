@@ -1,9 +1,9 @@
 import os
 import subprocess
-import yaml
 from copy import deepcopy
+
+import yaml
 from yaml.loader import SafeLoader
-from time import sleep
 
 from core.models.param import Param
 from core.models.step import Step
@@ -14,7 +14,7 @@ class Task:
         if not os.path.isfile(filepath) and not (filepath.endswith(".yml") or filepath.endswith(".yaml")):
             raise Exception("Task only accepts yaml files, .yml or .yaml")
 
-        with open(filepath, 'r') as fi:
+        with open(filepath, "r") as fi:
             self._raw = yaml.load(fi, SafeLoader)
 
         self.description = self._raw["metadata"].get("description", "No description")
@@ -37,8 +37,8 @@ class Task:
             print("\nRunning step: ", step_name)
             os.chdir(step.working_dir)
             proc = subprocess.Popen(command, bufsize=0, stdout=subprocess.PIPE)
-            for line in iter(proc.stdout.readline, b''):
-                print("outs:", line.decode('utf-8')[:-1])
+            for line in iter(proc.stdout.readline, b""):
+                print("outs:", line.decode("utf-8")[:-1])
 
             proc.stdout.close()
             proc.wait()
@@ -47,17 +47,22 @@ class Task:
             print("Finished step: ", step_name, "with exit code", ret_code)
 
     def _parse_params(self):
-        params = self._get('spec.params', [])
+        params = self._get("spec.params", [])
         if not params:
             return
-            
+
         self._params = {}
         for param in params:
-            self._params[param["name"]] = Param(param["name"], type=param["type"], default=param.get("default", None), description=param.get("description", None))
+            self._params[param["name"]] = Param(
+                param["name"],
+                type=param["type"],
+                default=param.get("default", None),
+                description=param.get("description", None),
+            )
 
     def _parse_steps(self):
-        steps = self._get('spec.steps', [])
-        
+        steps = self._get("spec.steps", [])
+
         if not steps:
             raise Exception("Task must have at least one step")
 
@@ -69,7 +74,7 @@ class Task:
             self._step_order.append(step["name"])
 
     def _get(self, path, default=None):
-        path_steps = path.strip().split('.')
+        path_steps = path.strip().split(".")
 
         if not path_steps:
             return None
@@ -77,10 +82,10 @@ class Task:
         try:
             returned = deepcopy(self._raw)
             for path_step in path_steps:
-                if path_step.startswith('[') and path_step.endswith(']'):
-                    path_step = int(path_step.replace('[', '').replace(']', ''))
+                if path_step.startswith("[") and path_step.endswith("]"):
+                    path_step = int(path_step.replace("[", "").replace("]", ""))
                 returned = returned[path_step]
-        except:
+        except Exception:
             return default
 
         return returned

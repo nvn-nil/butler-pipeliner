@@ -13,7 +13,7 @@ spec:
         default: _output
     steps:
       - name: Reduce points
-        workingDir: D:\personal\pipeliner\dist
+        workingDir: D:\personal\geo-suite\dist
         binary: line_thinner_v0.1.0.exe
         args:
           - -i "${params.input}"

@@ -12,7 +12,7 @@ class TestTask(BaseTestCase):
 
         kwargs = {
             "param_values": {
-                "input": "D:\personal\pipeliner\dist\sample\TouristAreas.txt"
+                "input": "tests\data\NaturalFeatures.txt"
             }
         }
         task.run(**kwargs)
@@ -25,7 +25,7 @@ class TestTask(BaseTestCase):
 
         kwargs = {
             "param_values": {
-                "input": "D:\personal\pipeliner\dist\sample\TouristAreas.txt",
+                "input": r"tests\data\NaturalFeatures.txt",
                 "suffix": "_output"
             }
         }

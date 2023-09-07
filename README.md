@@ -1,3 +1,3 @@
-# Pipeliner - core component of my Butler Suite
+# Pipeliner
 
-Pipeliner will handle definition and execution of Task (containing steps) and Pipeline (containing Tasks).
+Pipeliner is the execution/worker component of my Butler Suite. It will handle definition and execution of Task (containing steps) and Pipeline (containing Tasks).

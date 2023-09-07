@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pipeliner"
+name = "butler-pipeliner"
 version = "0.1.0"
 description = ""
 authors = ["Naveen Anil <naveenms01@gmail.com>"]
